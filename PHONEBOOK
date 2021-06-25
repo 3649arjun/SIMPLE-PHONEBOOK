@@ -1,0 +1,211 @@
+from tkinter import *
+from tkinter import messagebox
+import sqlite3
+
+def create():
+
+    pb_db=sqlite3.connect("phonebookDb.db")
+
+    c = pb_db.cursor()
+
+    c.execute("create table  if not exists phonebook(Name Text ,"
+           " Phone_No int(10))")
+    pb_db.commit()
+    pb_db.close()
+
+create()
+
+
+
+
+
+
+pb = Tk()
+pb.resizable(False,False)
+#title
+pb.title('phonebook')
+pb.geometry('500x500')
+#contacts = [['a', '856255'], ['b', '4568555'], ['c', '4845885'], ['d', '78455554'], ['e', '525224402'], ['f', '65555'],['g','4552241']]
+
+
+
+
+'''''
+#submit fnx
+
+
+def submit():
+
+    print(f"the added name is : {name.get()}")
+    print(f"the added  no is: {pno.get()}" )
+'''''
+
+
+
+def addlist():
+    pb_db = sqlite3.connect("phonebookDb.db")
+
+    c = pb_db.cursor()
+
+
+    c.execute("INSERT INTO phonebook  values (?,?)", (name.get(), pno.get()))
+    messagebox.showinfo("","ADDED SUCCESSFULLY")
+
+    pb_db.commit()
+
+#labelname
+n = Label(pb, text="NAME")
+n.pack(expand=TRUE)
+n.place(x=50,y=50)
+
+
+name = StringVar()
+#entryname
+name=Entry(pb,textvariable = name)
+name.pack(expand=TRUE)
+name.place(x=120,y=50)
+# name.delete(0, END)
+
+
+#labelphoneno
+no = Label(pb, text="PHONE NO")
+no.pack(expand=TRUE)
+no.place(x=50,y=80)
+
+
+pno = StringVar()
+#entryname
+pno=Entry(pb,textvariable = pno)
+pno.pack(expand=TRUE)
+pno.place(x=120,y=80)
+#pno.delete(0, END)
+
+''''
+fr4 = Frame(pb)
+# subbmit button
+sub = Button(pb, text='SUBMIT', bg='#ffc34d', command=lambda:submit)
+sub.pack()
+sub.place(x=150, y=120)
+'''
+
+
+
+fr1 =Frame(pb)
+#add button
+add=Button(pb,text='ADD',bg= '#ff8080',width=30,command = lambda : addlist())
+add.pack(expand=TRUE)
+add.place(x=30 ,y=180)
+
+
+
+fr2 =Frame(pb)
+#view button
+view=Button(pb,text='VIEW',bg= '#66e0ff',width=30 ,command = lambda : fetchdata())
+view.pack(expand=TRUE)
+view.place(x=260 ,y=180)
+
+
+
+
+
+
+
+
+
+
+
+def fetchdata():
+    pb_db = sqlite3.connect("phonebookDb.db")
+    c = pb_db.cursor()
+    c.execute("SELECT * FROM phonebook")
+    data=c.fetchall()
+    pb_db.commit()
+
+    for i in data:
+       text.insert(END,i, '\n')
+
+
+text = Listbox(pb,height=10,width=24)
+text.pack(side=BOTTOM)
+
+
+
+
+
+
+fr3= Frame(pb)
+# delete button
+dele = Button(pb, text='DELETE', bg='#9fff80', command=lambda: delete1())
+dele.pack(expand=TRUE)
+dele.place(x=180, y=290)
+
+#labeldelete item
+no = Label(pb, text="ENTER PHONE NUMBER YOU WANT TO DELETE")
+no.pack(expand=TRUE)
+no.place(x=100,y=225)
+
+#delete entry
+e1=StringVar()
+del_phno=Entry(pb,textvariable = e1)
+del_phno.pack(expand=TRUE)
+del_phno.place(x=150,y=250)
+
+def delete1():
+
+        pb_db = sqlite3.connect("phonebookDb.db")
+
+        c = pb_db.cursor()
+
+
+
+        c.execute("delete from phonebook where Phone_No= " + e1.get())
+        messagebox.showinfo("", "delete successsful (restart the program to see changes)")
+        print(f"DELETED ITEM IS : {e1.get()}")
+
+
+
+
+
+
+
+        pb_db.commit()
+
+
+
+
+        pb_db.commit()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+pb.mainloop()
